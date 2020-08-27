@@ -1,0 +1,21 @@
+<html>
+    <head>
+    <title></title>
+    </head>
+    <body>
+        <form  action='/' method="post"><br>
+            Input Your Bitcoin Address:<input type="text" name="address"><br>
+            <input type="submit" value="GET OVERVIEW">
+        </form>
+
+    </body>
+</html>
+
+<script>
+       fetch("/")
+      .then(response => response.json())
+  </script>
+</body>
+
+</html>
+

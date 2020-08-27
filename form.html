@@ -1,0 +1,15 @@
+<!-- forms.html -->
+<!--{{if .Success}}-->
+ 
+{{ .Addr}}
+<div><h3> Address:{{ .Address}} </h3></div>
+<div> First Name:{{ .Balance }}</div>
+<div> Last Name:{{ .TotalSent }} </div>
+<div> Balance:{{ .Balance }}</div>
+<!--{{else}}-->
+<h1>Check BALANCE </h1>
+<form method="POST">
+    <label>Addres:</label><br />
+    <input type="text" name="address"><br />
+    <input type="submit">
+</form>

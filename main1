@@ -1,0 +1,102 @@
+package main
+
+import (
+	"fmt"
+	"os"
+	"html/template"
+	"log"
+	"net/http"
+	"encoding/json"
+    //"io/ioutil"
+
+
+	"github.com/blockcypher/gobcy"
+	//"gopkg.in/matryer/respond.v1"
+)
+const key1 = "4d20cbd6a2c74d2f936b8d43502c4572"
+
+
+func respondWithJSON(response http.ResponseWriter, statusCode int, data interface{}) {
+	result, _ := json.Marshal(data)
+	response.Header().Set("Content-Type", "application/json")
+	response.WriteHeader(statusCode)
+	response.Write(result)
+func add(w http.ResponseWriter, r *http.Request) {
+    fmt.Println("method:", r.Method) //get request method
+    if r.Method == "GET" {
+		t, _ := template.ParseFiles("getaddr.gptl")
+        t.Execute(w, nil)
+    } else {
+        r.ParseForm()
+		 }
+		 // logic part of log in
+		 var Address  = r.FormValue("address")
+		 var btc = gobcy.API{key1, "btc", "main"}
+		 addr, err := btc.GetAddrBal(Address, nil)
+		if err != nil {
+			b, _ := json.Marshal(addr)
+			os.Stdout.Write(b)
+		}
+
+
+
+func main() {
+    http.HandleFunc("/", add)
+    err := http.ListenAndServe(":9090", nil) // setting listening port
+    if err != nil {
+        log.Fatal("ListenAndServe: ", err)
+    }
+}
+
+
+
+
+package main
+ 
+import (
+    "fmt"
+    "log"
+    "net/http"
+    "github.com/blockcypher/gobcy"
+
+
+)
+
+const key = "4d20cbd6a2c74d2f936b8d43502c4572"
+
+func hello(w http.ResponseWriter, r *http.Request) {
+   
+    if r.URL.Path != "/" {
+        http.Error(w, "404 not found.", http.StatusNotFound)
+        return
+    }
+ 
+    switch r.Method {
+    case "GET":     
+         http.ServeFile(w, r, "form.html")
+    case "POST":
+        // Call ParseForm() to parse the raw query and update r.PostForm and r.Form.
+        if err := r.ParseForm(); 
+        err != nil {
+            fmt.Fprintf(w, "ParseForm() err: %v", err)
+            return
+        }
+        fmt.Fprintf(w, "Post from website! r.PostFrom = %v\n", r.PostForm)
+        address := r.FormValue("address")
+		btc := gobcy.API{key, "btc", "main"}
+        addr, err := btc.GetAddrBal(address, nil)
+        (http.ResponseWriter,http.StatusOK, addr)
+         fmt.Fprintf(w, "Address = %s\n", address)
+    default:
+        fmt.Fprintf(w, "Sorry, only GET and POST methods are supported.")
+    }
+}
+
+func main() {
+    http.HandleFunc("/", hello)
+ 
+    fmt.Printf("Starting server for testing HTTP POST...\n")
+    if err := http.ListenAndServe(":8080", nil); err != nil {
+        log.Fatal(err)
+    }
+}
