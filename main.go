@@ -2,61 +2,63 @@
 package main
 
 import (
-    "fmt"
     "html/template"
     "net/http"
     "github.com/blockcypher/gobcy"
-   // "encoding/json"
+   "log"
+   "fmt"
 )
 
 type Response struct{
 	//geting started with our variables
-	address string 
-	wallet string 
-	hdWallet string 
-	totalReceived string 
-	totalSent string 
-	balance string 
-	unconfirmedBalance string 
-    finalBalance string 
+	Address string 
+	TotalReceived int 
+	TotalSent int 
+	Balance int 
+	UnconfirmedBalance int 
+    FinalBalance int 
 }
 const key = "4d20cbd6a2c74d2f936b8d43502c4572"
 
 
+	
+	
+	
+	type hotdog int
+	
+	func (m hotdog) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+		err := req.ParseForm()
+		if err != nil {
+			log.Fatalln(err)
+		}
+		Address := req.FormValue("address")
+    	btc := gobcy.API{key, "btc", "main"}
+		addr, err := btc.GetAddrBal(Address, nil)
+		 
+		data := Response{
+			Address :addr.Address, 
+			TotalReceived :addr.TotalReceived,
+			TotalSent :addr.TotalSent ,
+			Balance :addr.Balance ,
+			UnconfirmedBalance :addr.UnconfirmedBalance,
+			FinalBalance :addr.FinalBalance, 
+	
+			} 
+			fmt.Println("Address =",data.Address,"balance",data.Balance,)
 
-func main() {
-    tmpl := template.Must(template.ParseFiles("form.html"))
-
-    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-        if r.Method != http.MethodPost {
-            tmpl.Execute(w, nil)
-            return
-        }
-
-
-        address:=   r.FormValue("address")
-
-        // do something with details
-        btc := gobcy.API{key, "btc", "main"}
-        Addr, err := btc.GetAddrBal(address, nil)
-        if err != nil {
-            panic(err.Error())
-        }
-        fmt.Println(Addr.Balance)
-        fmt.Printf("%+v\n", Addr)
-
-
-          //var data Response
-    
-          // unmarshall
-         // json.Unmarshal(addr, &data)
-        
-
-
-
-
-        tmpl.Execute(w, struct{ Success bool }{true})
-    })
-
-    http.ListenAndServe(":8000", nil)
-}
+		
+       
+		tpl.ExecuteTemplate(w, "index.gohtml", data)
+	}
+	
+	
+	var tpl *template.Template
+	
+	func init() {
+		tpl = template.Must(template.ParseFiles("index.gohtml"))
+	}
+	
+	func main() {
+		var d hotdog
+		http.ListenAndServe(":8880", d)
+	}
