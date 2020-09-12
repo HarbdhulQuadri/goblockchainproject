@@ -15,11 +15,12 @@
 {{if .}}
 <main>
     <p><strong>variable names</strong> (identifiers) and <em>values</em>:</p>
-    {{range $key, $value := .}}
-            <p><strong>{{$key}}</strong></p>
-            <ul>{{range $value}}<li><em>{{.}}</em></li>{{end}}</ul>
-    {{end}}
+            <p>Balance::::<strong>{{.Balance}}</strong></p>
+            <p>TotalReceived::::<strong>{{.TotalReceived}}</strong></p>
+            <p>TotalSent::::<strong>{{.TotalSent}}</strong></p>
+            <p>Address::::<strong>{{.Address}}</strong></p>
+           
+
 </main>
-{{end}}
 </body>
 </html>
